@@ -37,7 +37,6 @@
 
      50%{margin-left: -230%;}
      70%{margin-left: -230%;}
-
   
    }
 
@@ -48,14 +47,108 @@
    .foot{
     margin-left: -32px;
    }
-   .footer{
-       position: absolute;
-       margin-top: 1132px;
-       float: left;
+    * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    }
+
+    .footer {
+    width: 100%;
+    background: #202020;
+    color: white;
+    margin: auto;
+
+    }
+
+    .footer {
+    position: absolute;
+    margin-top: 760px;
+    float: left;
+    width: 1366px;
+    height: 400px;
+    text-align: center;
+    background-color: #1F4E79;
+    font-size: 3px;
+    color: rgb(255, 255, 255);
+    }
+
+   .container-footer-all{
        width: 1366px;
-       height: 200px;
-       text-align: center;
-       background-color: #1F4E79;
-       font-size: 3px;
-       color: rgb(255, 255, 255);
+       max-width: 1366px;
+       margin: auto;
+       padding: 50px;
    }
+    .container-body {
+        display: flex;
+        justify-content: space-between;
+    }
+   .colum1{
+    max-width:400px;
+   }
+   .colum1 h1{
+       justify-content:left;
+       font-size: 22px;
+   }
+    .colum1 p {
+        justify-content: left;
+        font-size: 14px;
+        color: white;
+        margin-top: 20px;
+    }
+    .colum2 {
+        max-width: 500px;
+    }
+    .colum2 h1 {
+        justify-content: left;
+        font-size: 22px;
+    }
+
+    .row {
+        margin-top: 20px;
+        display: flex;
+    }
+    .row img{
+        width: 25px;
+        height: 25px;
+    }
+    .row label{
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+    .colum3{
+        max-width: 400px;
+    }
+    .colum3 h1 {
+        justify-content: left;
+        font-size: 22px;
+    }
+    .row2{
+        margin-top: 20px;
+        display: flex;
+    }
+    .row2 img{
+        width: 25px;
+        height: 25px;
+    }
+    .row2 label {
+        margin-top: 10px;
+        margin-left: 20px;
+        max-width: 140px;
+    }
+.container-footer {
+    max-width: 1366px;
+    background: #002541;
+    display: flex;
+    padding: 20px;
+    justify-content: space-between;
+    font-size: 14px;
+}
+    .copyright {
+        color:white;
+        
+    }
+    .information{
+        color: white;
+    }
