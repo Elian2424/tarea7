@@ -1,45 +1,157 @@
 @page "/Registrar"
-
-
-
-
+@using Newtonsoft.Json
 
 <div class="main">
+  <div class="texto">
+    <h2>Registrar</h2>
+    <p>Busque su cedula en el sistema, si no aparece inserte sus datos.</p>
+  </div>
 
-   <h1>Aqui Registrar</h1>
-     
-     <ul class="lista1">
-        
-              <li class="list"> <h4>Nombre: </h4></li>
-              <li class="list"><input type="text"></li>
-               <li class="list"> <h4>Apellido: </h4></li>
-              <li class="list"><input type="text"></li>
-              <li class="list"> <h4>Telefono: </h4></li>
-              <li class="list"><input type="text"></li>
-          
-
-        
-        
-             <ul class="lista3"> 
+  <nav class="search">
+    <div class="texto-2">
+      <h5>Cedula:</h5>
+    </div>
 
 
-              <li class="list"> <h4>Cedula: </h4></li>
-              <li class="list"><input type="text"></li>
-              <li class="list"> <h4> Nacimiento: </h4></li>
-              <li class="list"><input type="text"></li>
-              <li class="list"> <h4>:Vacuna</h4></li>
-              <li class="select"><input type="text"></li>
-            </ul>
-        
-        <ul>
-          <li class="list"> <h4>Provincia</h4></li>
-              <li class="select"><input type="text"></li>
-        </ul>
- 
+    <input type="text" @bind-value="cedula">
+    <button class="btn btn-primary" @onclick="buscar">Buscar</button>
+    <button class="btn btn-primary" @onclick="limpiar">limpiar</button>
 
-     </ul>
+  </nav>
+
+  <div class="registro">
+    <ul class="lista1">
+
+      <li class="list">
+        <h5>Nombre: </h5>
+      </li>
+      <li class="list"><input type="text" disabled @bind-value="firstname"></li>
+      <li class="list">
+        <h5>Apellido: </h5>
+      </li>
+      <li class="list"><input type="text" disabled @bind-value="lastname"></li>
+      <li class="list">
+        <h5>Telefono: </h5>
+      </li>
+      <li class="list"><input type="text" @bind-value="phone"></li>
+
+    </ul>
+    <ul class="lista1">
+
+
+      <li class="list">
+        <h5>Nacimiento: </h5>
+      </li>
+      <li class="list"><input type="text" @bind-value="birthday"></li>
+      <li class="list">
+        <h5>Provincia: </h5>
+      </li>
+      <li class="list">
+
+        <select name="provincia">
+          <option>imprima los valores con For aqui</option>
+        </select>
+
+      </li>
+      <li class="list">
+        <h5>Fecha: </h5>
+      </li>
+      <li class="list"><input type="text"></li>
+
+    </ul>
+    <ul class="lista1">
+      <li class="list">
+        <h5>Vacuna:</h5>
+      </li>
+      <li class="list">
+        <select name="Vacunas">
+          <option>imprima los valores con Foreach aqui</option>
+        </select>
+
+      </li>
+    </ul>
+
+
+    <div class="save"> <button class="btn btn-primary" @onclick="guardar">Guardar</button></div>
+
+  </div>
+
+
 </div>
 
 @code{
-    
+
+  string firstname = "";
+
+  string lastname = "";
+
+  string phone = "";
+
+  string birthday = "";
+
+  int province = 0;
+
+
+  DateTime vac_date;
+
+
+  //related with the cedula
+
+  private String cedula = "";
+  private bool valid = true;
+  private String errorMessage = "";
+  private String loadState = "none";
+  private CedulaJson cedulaJson = new CedulaJson(){
+    Nombres = "",
+    Apellido1 = ""
+  };
+  private int what = 0;
+
+  HttpClient client = new HttpClient();
+
+
+  async void buscar()
+
+  {
+
+        var response = client.GetAsync("https://api.adamix.net/apec/cedula/" + cedula).Result;
+
+        if (response.IsSuccessStatusCode)
+
+        {
+
+          var customerJsonString = await response.Content.ReadAsStringAsync();
+
+          var deserialized = JsonConvert.DeserializeObject<CedulaJson>(custome‌​rJsonString);
+
+          cedulaJson = deserialized;
+
+          
+          firstname = cedulaJson.Nombres;
+          lastname = cedulaJson.Apellido1 + " " + cedulaJson.Apellido2;
+          birthday = cedulaJson.FechaNacimiento.Date.ToString();
+
+          loadState = "done";
+
+        }
+
+  }
+
+  void limpiar()
+  {
+
+  }
+
+  void guardar()
+  {
+      //obtener el ciudadano, si no existe agregarlo
+      var response = client.GetAsync("https://localhost/citizens/" + cedula).Result;
+
+        if (response.IsSuccessStatusCode){
+System.Console.WriteLine( "existe procede ");
+        }else{
+          System.Console.WriteLine( "no exite agregalo");
+        }
+  }
+
 }

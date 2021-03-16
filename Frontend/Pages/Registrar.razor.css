@@ -2,11 +2,15 @@
    
    margin-top: 42px;
    width: 100%;
-   
+   color: cornsilk;
     color: rgb(255, 255, 255);
 }
 li{
     list-style: none;
+}.texto{
+    margin-top: 40px;
+    margin-left: 170px;
+    
 }
 
 .lista1 .list {
@@ -15,12 +19,49 @@ li{
 }
 
 .lista1{
+    margin-top: 100px;
     padding: 10px;
     margin-left: 10px;
 }
 
-.lista3 .list{
-    margin-top: 100px;
-    
+.lista-s .list-s{
+    float: left;
     margin-left: 10px;
+}
+.lista-s {
+    padding: 10px;
+    
+
+}
+
+.search{
+    
+    margin-left: 500px;
+    margin-top: 30px;
+    
+}
+
+button{
+    
+    margin: 10px;
+
+}
+.texto-2{
+    position: absolute;
+    margin-top: 15px;
+    margin-left: -100px;
+}
+.registro{
+ position: absolute;
+    width: 1200px;
+    margin-left: 100px;
+}
+.save{
+    margin-top: -50px;
+    margin-left: 700px;
+}
+.save button{
+    width: 150px;
+    height: 50px;
+    
 }

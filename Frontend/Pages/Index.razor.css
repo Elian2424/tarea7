@@ -32,11 +32,11 @@
      0%{margin-left: -50px;}
      20%{margin-left: -50px;}
 
-     25%{margin-left: -120%;}
-     45%{margin-left: -120%;}
+     25%{margin-left: -110%;}
+     45%{margin-left: -110%;}
 
-     50%{margin-left: -230%;}
-     70%{margin-left: -230%;}
+     50%{margin-left: -225%;}
+     70%{margin-left: -225%;}
   
    }
 
@@ -151,4 +151,18 @@
     }
     .information{
         color: white;
+    }
+
+    .parrafo{
+        padding: 20px;
+        text-align: justify;
+        font-size: 18px;
+        position: absolute;
+        margin-top: 500px;
+        color: rgb(255, 255, 255);
+    }
+    .parrafo h2{
+        text-align: center;
+        margin-top: -100px;
+        padding: 20px;
     }
