@@ -2,6 +2,25 @@
    
    margin-top: 42px;
    width: 100%;
-   font-size: 3px;
+   
     color: rgb(255, 255, 255);
+}
+li{
+    list-style: none;
+}
+
+.lista1 .list {
+    float: left;
+    margin-left: 10px;
+}
+
+.lista1{
+    padding: 10px;
+    margin-left: 10px;
+}
+
+.lista3 .list{
+    margin-top: 100px;
+    
+    margin-left: 10px;
 }
