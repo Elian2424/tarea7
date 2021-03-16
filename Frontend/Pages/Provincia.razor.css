@@ -1,0 +1,47 @@
+.main {
+    margin-top: 100px;
+    color: cornsilk;
+    width: 100%;
+    color: rgb(255, 255, 255);
+}
+
+.texto {
+    margin-left: 170px;
+}
+
+.container {
+    color: cornsilk;
+    color: rgb(255, 255, 255);
+    width: 800px;
+    margin: 50px;
+}
+
+table {
+    margin-left: 80px;
+    width: 800px;
+    background-color: #1F4E79;
+    color: cornsilk;
+    color: rgb(255, 255, 255);
+}
+
+.tbody {
+    background-color: #2a4666;
+}
+
+.search {
+    margin-left: 300px;
+    margin-top: 130px;
+}
+
+button {
+    margin: 10px;
+}
+
+.page {
+    margin-left: 100px;
+    margin-top: -100px;
+}
+
+input {
+    width: 400px;
+}
