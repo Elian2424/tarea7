@@ -1,4 +1,5 @@
 @page "/Registrar"
+@using Data.Models
 @using Newtonsoft.Json
 
 <div class="main">
@@ -42,21 +43,21 @@
       <li class="list">
         <h5>Nacimiento: </h5>
       </li>
-      <li class="list"><input type="text" @bind-value="birthday"></li>
+      <li class="list">
+        <input type="text" @bind-value="birthday"></li>
       <li class="list">
         <h5>Provincia: </h5>
       </li>
       <li class="list">
 
         <select name="provincia">
-          <option>imprima los valores con For aqui</option>
+          @foreach (Provinces prov in provinces)
+          {
+              <option>@prov.Name</option>
+          }
         </select>
 
       </li>
-      <li class="list">
-        <h5>Fecha: </h5>
-      </li>
-      <li class="list"><input type="text"></li>
 
     </ul>
     <ul class="lista1">
@@ -64,12 +65,22 @@
         <h5>Vacuna:</h5>
       </li>
       <li class="list">
-        <select name="Vacunas">
-          <option>imprima los valores con Foreach aqui</option>
+        <select name="vacunas">
+          @foreach (Vaccines vac in vaccines)
+          {
+              <option>@vac.Name</option>
+          }
         </select>
 
       </li>
     </ul>
+
+    <div class="text-white">Dosis No. @if (lastDosis)
+    {
+        <span>2</span>
+    }else{
+     <span>1</span> 
+    }</div>
 
 
     <div class="save"> <button class="btn btn-primary" @onclick="guardar">Guardar</button></div>
@@ -80,6 +91,7 @@
 </div>
 
 @code{
+  
 
   string firstname = "";
 
@@ -89,8 +101,15 @@
 
   string birthday = "";
 
-  int province = 0;
+  bool lastDosis = false;
 
+
+
+  List<Vaccines> vaccines = new vaccineContext().Vaccines.ToList();
+    List<Provinces> provinces = new vaccineContext().Provinces.ToList();
+
+     int selectedProvince =  new vaccineContext().Provinces.First().Id; 
+     int selectedVaccine =  new vaccineContext().Vaccines.First().Id; 
 
   DateTime vac_date;
 
@@ -113,6 +132,7 @@
   async void buscar()
 
   {
+    vaccineContext context = new vaccineContext();
 
         var response = client.GetAsync("https://api.adamix.net/apec/cedula/" + cedula).Result;
 
@@ -131,6 +151,17 @@
           lastname = cedulaJson.Apellido1 + " " + cedulaJson.Apellido2;
           birthday = cedulaJson.FechaNacimiento.Date.ToString();
 
+          if(context.Citizens.Where(c=>c.IdNumber == cedula).Count() > 0){
+              lastDosis = true;
+
+              Citizens cit = context.Citizens.Where(c=>c.IdNumber == cedula).FirstOrDefault();
+
+              phone = cit.Phone;
+              selectedProvince = context.Records.Where(r=>r.Citizen == cit.Id).FirstOrDefault().Province;
+              selectedVaccine = context.Records.Where(r=>r.Citizen == cit.Id).FirstOrDefault().Vaccine;
+
+          }
+
           loadState = "done";
 
         }
@@ -142,16 +173,59 @@
 
   }
 
-  void guardar()
+  async void guardar()
   {
-      //obtener el ciudadano, si no existe agregarlo
-      var response = client.GetAsync("https://localhost/citizens/" + cedula).Result;
+      vaccineContext context = new vaccineContext();
 
-        if (response.IsSuccessStatusCode){
-System.Console.WriteLine( "existe procede ");
-        }else{
-          System.Console.WriteLine( "no exite agregalo");
-        }
+      if(context.Citizens.Where(c=>c.IdNumber == cedula).Count() > 0){
+        //existe un usuario asi
+        lastDosis= true;
+
+
+      }else{
+        //no existe, agregalo
+        context.Citizens.Add(new Citizens(){
+            FirstName = cedulaJson.Nombres,
+            LastName = cedulaJson.Apellido1 + " "  + cedulaJson.Apellido2,
+            Phone = phone,
+            BirthDate = cedulaJson.FechaNacimiento,
+            IdNumber = cedula
+          });
+          var result = await context.SaveChangesAsync();
+
+      }
+
+      if(lastDosis){
+        //this is the last one
+        Records rec = context.Records.Where(r=>context.Citizens.Where(c=>c.Id == r.Citizen).Any()).FirstOrDefault();
+
+        rec.LastVacDate = DateTime.Now;
+
+        context.Records.Update(rec);
+        var u = await context.SaveChangesAsync();
+        
+      }else{
+        //this is the first one
+              context.Records.Add(new Records(){
+        Citizen = context.Citizens.Where(c=>c.IdNumber == cedula).SingleOrDefault().Id,
+        Province = selectedProvince,
+        Vaccine = selectedVaccine,
+        FirstVacDate = DateTime.Now,
+        LastVacDate = null
+      });
+      }
+
+
+
+
+      Vaccines upt = context.Vaccines.Where(v=>v.Id == selectedVaccine).FirstOrDefault();
+
+      upt.Amounted = upt.Amounted - 1;
+
+      context.Vaccines.Update(upt);
+
+      var res = await context.SaveChangesAsync();
+      System.Console.WriteLine("hecho");    
   }
 
 }

@@ -9,8 +9,8 @@
 
 <div class="page">
      <div class="search">
-         <input type="text">
-         <button class="btn btn-primary" >Buscar</button>
+         <input type="text" @bind-value="campo">
+         <button class="btn btn-primary" @onclick="buscar">Buscar</button>
          <button class="btn btn-primary" >Limpiar</button>
      </div>
  
@@ -29,11 +29,15 @@
    </thead> 
    <tbody class="tbody">
         
-        
-            <tr>             
-                <td>valores aqui</td>
-                <td>valores aqui</td>        
+        @foreach (Provinces p in provinces)
+        {            <tr>             
+                <td>@p.Name</td>
+                <td>@c.Records.Where(r=>r.Province == p.Id).Count()</td>        
             </tr>
+            
+        }
+        
+
         
    </tbody>
  
@@ -43,5 +47,16 @@
 </div>
 
 @code{
+
+        vaccineContext c = new vaccineContext();
+
+    string campo = "";
+
+    List<Provinces> provinces = new List<Provinces>();
+
+    
+    void buscar(){
+        provinces = new vaccineContext().Provinces.Where(p=>p.Name.ToLower().Contains(campo.ToLower())).ToList();
+    }
     
 }

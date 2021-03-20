@@ -22,7 +22,7 @@
    <thead>
 
          <tr>
-            <th>Nombre</th>
+       
              <th>Marca</th>
              <th>Cantdad restante</th>
              <th>Vacunados</th>
@@ -33,13 +33,14 @@
    <tbody class="tbody">
         
         
-            <tr>
-                
-                <td>valores aqui</td>
-                <td>valores aqui</td>
-                <td>valores aqui</td>
-                <td>valores aqui</td>
+        @foreach (Vaccines v in vaccines)
+        {            <tr>             
+                <td>@v.Name</td>
+                <td>@v.Amounted</td>
+                <td>@c.Records.Where(r=>r.Vaccine == v.Id).Count()</td>        
             </tr>
+            
+        }
         
    </tbody>
  
@@ -48,5 +49,12 @@
 </div>
 </div>
 @code{
+        vaccineContext c = new vaccineContext();
 
+    string campo = "";
+
+    List<Vaccines> vaccines = new vaccineContext().Vaccines.ToList();
+
+   
+    
 }

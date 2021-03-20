@@ -11,8 +11,8 @@
 
 <div class="page">
      <div class="search">
-         <input type="text">
-         <button class="btn btn-primary" >Buscar</button>
+         <input type="text" @bind-value="campo">
+         <button class="btn btn-primary" @onclick="buscar" >Buscar</button>
          <button class="btn btn-primary" >limpiar</button>
      </div>
  
@@ -29,24 +29,31 @@
              <th>Apellido</th>
              <th>Provincia</th>
              <th>Fecha de Vacuna</th>
-             <th>Provincia</th>
+             <th>1ra Dosis</th>
+             <th>2da Dosis</th>
          </tr>
 
    </thead> 
    <tbody class="tbody">
         
-        
-            <tr>
+        @foreach (Records rcd in records)
+        {
+    
+                        <tr>
                 
-                <td>valores aqui</td>
-                <td>valores aqui</td>
-                <td>valores aqui</td>
-                <td>valores aqui</td>
-                <td>valores aqui</td>
-                <td>valores aqui</td>
+                <td>@c.Citizens.Where(c=>c.Id == rcd.Citizen).FirstOrDefault().IdNumber</td>
+                <td>@c.Citizens.Where(c=>c.Id == rcd.Citizen).FirstOrDefault().FirstName</td>
+                <td>@c.Citizens.Where(c=>c.Id == rcd.Citizen).FirstOrDefault().LastName</td>
+                <td>@c.Provinces.Where(p=>p.Id == rcd.Province).FirstOrDefault().Name</td>
+                <td>@c.Vaccines.Where(p=>p.Id == rcd.Vaccine).FirstOrDefault().Name</td>
+                <td>@rcd.FirstVacDate</td>
+                <td>@rcd.LastVacDate</td>
 
                 
             </tr>
+        }
+        
+
         
    </tbody>
  
@@ -55,5 +62,17 @@
 </div>
 </div>
 @code{
+
+    vaccineContext c = new vaccineContext();
+
+    string campo = "";
+
+    List<Records> records = new List<Records>();
+
+
+    void buscar(){
+        records = new vaccineContext().Records.Where(r=> r.CitizenNavigation.FirstName.Contains(campo) || r.CitizenNavigation.LastName.Contains(campo)).ToList();
+        
+            }
 
 }

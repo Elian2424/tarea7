@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace prueba.Data.Models
+namespace prueba.Models
 {
     public partial class Vaccines
     {
@@ -16,7 +16,7 @@ namespace prueba.Data.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Amounted { get; set; }
+        public int Amounted { get; set; }
 
         public virtual ICollection<Records> Records { get; set; }
     }
