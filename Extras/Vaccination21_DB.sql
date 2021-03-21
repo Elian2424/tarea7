@@ -23,7 +23,10 @@ CREATE TABLE `Records` (
 `vaccine` INT NOT NULL,
 `province` INT NOT NULL,
 `first_vac_date` TIMESTAMP NULL DEFAULT NULL,
-`last_vac_date` TIMESTAMP NULL DEFAULT NULL);
+`last_vac_date` TIMESTAMP NULL DEFAULT NULL,
+`latitude` DECIMAL(18,15),
+`longitude` DECIMAL(18,15));
+
 
 CREATE TABLE `provinces` (
 `id` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

@@ -121,6 +121,14 @@ namespace prueba.Models
                     .HasColumnName("last_vac_date")
                     .HasColumnType("timestamp");
 
+                entity.Property(e => e.Latitude)
+                    .HasColumnName("latitude")
+                    .HasColumnType("decimal(10,0)");
+
+                entity.Property(e => e.Longitude)
+                    .HasColumnName("longitude")
+                    .HasColumnType("decimal(10,0)");
+
                 entity.Property(e => e.Province)
                     .HasColumnName("province")
                     .HasColumnType("int(11)");

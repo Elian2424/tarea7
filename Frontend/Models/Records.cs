@@ -15,6 +15,8 @@ namespace prueba.Models
         public int Province { get; set; }
         public DateTime? FirstVacDate { get; set; }
         public DateTime? LastVacDate { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
 
         public virtual Citizens CitizenNavigation { get; set; }
         public virtual Provinces ProvinceNavigation { get; set; }

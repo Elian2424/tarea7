@@ -2,97 +2,89 @@
 @using Data.Models
 @using Newtonsoft.Json
 
+<div class="row">
+<div class="col-xl-6 pr-4">
 <div class="main">
   <div class="texto">
     <h2>Registrar</h2>
     <p>Busque su cedula en el sistema, si no aparece inserte sus datos.</p>
   </div>
-
-  <nav class="search">
-    <div class="texto-2">
-      <h5>Cedula:</h5>
-    </div>
-
-
+  <div class="d-flex align-items-center text-white">
+<h5>Cedula:</h5>
     <input type="text" @bind-value="cedula">
     <button class="btn btn-primary" @onclick="buscar">Buscar</button>
     <button class="btn btn-primary" @onclick="limpiar">limpiar</button>
-
-  </nav>
-
-  <div class="registro">
-    <ul class="lista1">
-
-      <li class="list">
-        <h5>Nombre: </h5>
-      </li>
-      <li class="list"><input type="text" disabled @bind-value="firstname"></li>
-      <li class="list">
-        <h5>Apellido: </h5>
-      </li>
-      <li class="list"><input type="text" disabled @bind-value="lastname"></li>
-      <li class="list">
-        <h5>Telefono: </h5>
-      </li>
-      <li class="list"><input type="text" @bind-value="phone"></li>
-
-    </ul>
-    <ul class="lista1">
-
-
-      <li class="list">
-        <h5>Nacimiento: </h5>
-      </li>
-      <li class="list">
-        <input type="text" @bind-value="birthday"></li>
-      <li class="list">
-        <h5>Provincia: </h5>
-      </li>
-      <li class="list">
-
+  </div>
+<div class="row">
+  <div class="col-6 d-flex align-items-center justify-content-between px-2">
+<h5>Nombre: </h5>
+<input type="text" disabled @bind-value="firstname"/>
+  </div>
+    <div class="col-6 d-flex align-items-center justify-content-between px-2">
+<h5>Apellido: </h5>
+<input type="text" disabled @bind-value="lastname"/>
+  </div>
+    <div class="col-6 d-flex align-items-center justify-content-between px-2">
+<h5>Telefono: </h5>
+<input type="text" @bind-value="phone"/>
+  </div>
+    <div class="col-6 d-flex align-items-center justify-content-between px-2">
+<h5>Nacimiento: </h5>
+<input type="text" disabled @bind-value="birthday"/>
+  </div>
+    <div class="col-6 d-flex align-items-center justify-content-between px-2">
+<h5>Provincia: </h5>
         <select name="provincia">
           @foreach (Provinces prov in provinces)
           {
               <option>@prov.Name</option>
           }
         </select>
-
-      </li>
-
-    </ul>
-    <ul class="lista1">
-      <li class="list">
-        <h5>Vacuna:</h5>
-      </li>
-      <li class="list">
+  </div>
+    <div class="col-6 d-flex align-items-center justify-content-between px-2">
+<h5>Vacuna: </h5>
         <select name="vacunas">
           @foreach (Vaccines vac in vaccines)
           {
               <option>@vac.Name</option>
           }
         </select>
-
-      </li>
-    </ul>
-
+  </div>
+    <div class="col-6 d-flex align-items-center justify-content-between px-2">
     <div class="text-white">Dosis No. @if (lastDosis)
     {
         <span>2</span>
     }else{
      <span>1</span> 
     }</div>
+</div>
 
 
-    <div class="save"> <button class="btn btn-primary" @onclick="guardar">Guardar</button></div>
 
-  </div>
+    <button class="btn btn-primary" @onclick="guardar">Guardar</button>
+
+ 
 
 
+</div>
+</div>
+</div>
+<div class="col-xl-6">
+      <RadzenGoogleMap style="height: 600px;" Zoom="9" Center="@(new GoogleMapPosition(){Lat = 18.99717148716791,Lng=-69.85096824795758})" MapClick="@OnMapClick">
+        <Markers>
+            @if (position != null)
+            {
+               <RadzenGoogleMapMarker Title="Rep. Dom." Position="@(new GoogleMapPosition(){Lat = position.latitude,Lng=position.longitude})" />
+            }
+        </Markers>
+    </RadzenGoogleMap>
+</div>
 </div>
 
 @code{
   
-
+  Position position = null;
+    int zoom = 9;
   string firstname = "";
 
   string lastname = "";
@@ -127,8 +119,10 @@
   private int what = 0;
 
   HttpClient client = new HttpClient();
-
-
+    void OnMapClick(GoogleMapClickEventArgs args)
+    {
+        position = new Position(){latitude=args.Position.Lat,longitude=args.Position.Lng};
+    }
   async void buscar()
 
   {
@@ -157,8 +151,10 @@
               Citizens cit = context.Citizens.Where(c=>c.IdNumber == cedula).FirstOrDefault();
 
               phone = cit.Phone;
-              selectedProvince = context.Records.Where(r=>r.Citizen == cit.Id).FirstOrDefault().Province;
-              selectedVaccine = context.Records.Where(r=>r.Citizen == cit.Id).FirstOrDefault().Vaccine;
+              Records re = context.Records.Where(r=>r.Citizen == cit.Id).FirstOrDefault();
+              selectedProvince = re.Province;
+              selectedVaccine = re.Vaccine;
+              position = new Position(){latitude=(double)re.Latitude,longitude=(double)re.Longitude};
 
           }
 
@@ -189,7 +185,7 @@
             LastName = cedulaJson.Apellido1 + " "  + cedulaJson.Apellido2,
             Phone = phone,
             BirthDate = cedulaJson.FechaNacimiento,
-            IdNumber = cedula
+            IdNumber = cedula,          
           });
           var result = await context.SaveChangesAsync();
 
@@ -211,7 +207,9 @@
         Province = selectedProvince,
         Vaccine = selectedVaccine,
         FirstVacDate = DateTime.Now,
-        LastVacDate = null
+        LastVacDate = null,
+        Latitude=(decimal) position.latitude,
+        Longitude=(decimal)position.longitude
       });
       }
 

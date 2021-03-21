@@ -1,0 +1,79 @@
+@page "/Mapa"
+
+@inject IJSRuntime JSRuntime
+
+
+<div class="text-white d-flex justify-content-center align-items-center" style="height:100vh;">
+
+    <div class="row" style="width: 80%;">
+        <div class="col-xl-6">
+                <h3>
+        <RadzenCheckBox @bind-Value="@showRDMarker"/>
+    </h3>
+    <RadzenGoogleMap style="height: 600px;" Zoom="9" Center="@(new GoogleMapPosition(){Lat = 18.99717148716791,Lng=-69.85096824795758})"  MarkerClick="@OnMarkerClick">
+        <Markers>
+            @if (records.Count()>0)
+            {
+                @foreach (Records rcr in records)
+                    {
+            <RadzenGoogleMapMarker Position="@(new GoogleMapPosition(){Lat = (double)rcr.Latitude,Lng=(double)rcr.Longitude})" />
+
+                }
+            }
+        </Markers>
+    </RadzenGoogleMap>
+        </div>
+        <div class="col-xl-6">
+            @if (record != null)
+            {
+                <div class="d-flex text-white">
+                    Nombre: @(c.Citizens.Where(c=>c.Id == record.Citizen).FirstOrDefault().FirstName)
+                </div>
+                <div class="d-flex text-white">
+                    Apellido: @(c.Citizens.Where(c=>c.Id == record.Citizen).FirstOrDefault().LastName)
+                </div>
+                <div class="d-flex text-white">
+                    Primera vacuna: @(record.FirstVacDate)
+                </div>
+                <div class="d-flex text-white">
+                    Segunda vacuna: @if (record.LastVacDate != null)
+                    {
+                        <span>@record.LastVacDate</span>
+                    }else{
+                        <span>NO VACUNADO</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+@code{
+
+    vaccineContext c = new vaccineContext();
+    
+        int zoom = 3;
+    bool showRDMarker;
+    string clickedPosition = "";
+
+    Records record = null;
+
+    List<Records> records = new vaccineContext().Records.ToList();
+
+    void OnMapClick(GoogleMapClickEventArgs args)
+    {
+        clickedPosition = $"Map clicked LAT : {args.Position.Lat}, LNG : {args.Position.Lng}";
+    }
+
+    void OnMarkerClick(RadzenGoogleMapMarker args)
+    {
+        clickedPosition = $"Map {args.Title} clicked LAT : {args.Position.Lat}, LNG : {args.Position.Lng}";
+        record = records.Where(r=>r.Latitude==(decimal)args.Position.Lat && r.Longitude == (decimal)args.Position.Lng).FirstOrDefault();
+    }
+
+    void quit()
+    {
+        record = null;
+    }
+}
